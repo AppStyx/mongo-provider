@@ -27,13 +27,13 @@ public final class Provider: Vapor.Provider {
         host: String = "localhost",
         port: Int = 27017
     ) throws {
-        let driver = try MongoDriver(
-            database: database,
-            user: user,
-            password: password,
-            host: host,
-            port: port
-        )
+        let connectionString: String
+        if !user.isEmpty && !password.isEmpty{
+            connectionString = "mongodb://\(user):\(password)@\(host):\(port)/\(database)"
+        } else {
+            connectionString = "mongodb://\(host):\(port)/\(database)"
+        }
+        let driver = try MongoDriver(connectionString: connectionString)
         self.driver = driver
         self.database = Database(driver)
     }
